@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Health - CI/CD Pipeline</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>Dev Ops CI/CD Pipeline</header>
+    <nav id="navbar">
+        <div id="child1"> <img width="100"
+                src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="Logo">
+        </div>
+        <div id="child2" class="child2">
+            <a href="index.html">Home</a>
+            <a href="build.html">Build</a>
+            <a href="performance.html">Performance</a>
+            <a href="deploy.html">Deploy</a>
+            <a href="pipeline.html">Pipeline</a>
+            <a href="health.html">Health</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>System Health</h1>
+        <p>Real-time monitoring of infrastructure and application services.</p>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">
+                    API Gateway
+                    <span class="status-pill status-success">Online</span>
+                </div>
+                <div class="stat-value">99.98%</div>
+                <div class="stat-label">Uptime (Last 30d)</div>
+                <p>Latency: 45ms avg</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    Database Cluster
+                    <span class="status-pill status-success">Active</span>
+                </div>
+                <div class="stat-value">12.5%</div>
+                <div class="stat-label">CPU Utilization</div>
+                <p>Connections: 124 active</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    Authentication Service
+                    <span class="status-pill status-success">Healthy</span>
+                </div>
+                <div class="stat-value">18ms</div>
+                <div class="stat-label">Avg Response Time</div>
+                <p>Status: All nodes operational</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    Redis Cache
+                    <span class="status-pill status-warning">High Load</span>
+                </div>
+                <div class="stat-value">88.2%</div>
+                <div class="stat-label">Memory Usage</div>
+                <p>Eviction rate: 2.1/s</p>
+            </div>
+        </div>
+
+        <h2 style="color: #32e6e2; margin-top: 3rem;">Active Alerts</h2>
+        <div class="card" style="border-left: 4px solid #ffa500; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between;">
+                <strong>Cache Memory Threshold</strong>
+                <span class="status-pill status-warning">Warning</span>
+            </div>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Redis-01 memory usage exceeded 85%. Scaling may be
+                required.</p>
+            <span class="stat-label">Detected: 15 minutes ago</span>
+        </div>
+
+        <div class="card" style="border-left: 4px solid #0ceb0c;">
+            <div style="display: flex; justify-content: space-between;">
+                <strong>Database Backup Complete</strong>
+                <span class="status-pill status-success">Info</span>
+            </div>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Daily automated backup for DB-Cluster successfully
+                archived to S3.</p>
+            <span class="stat-label">Timestamp: 2026-02-21 04:00</span>
+        </div>
+    </div>
+
+    <footer>
+        <div id="foot">
+            <div id="foot1" class="foot_child">
+                <h3>English(United States)</h3>
+                <h3>Your Privacy Choice</h3>
+            </div>
+            <div id="foot2" class="foot_child">
+                <h3>Ai Disclaimer</h3>
+                <h3>Terms of Use</h3>
+                <h3>Trademarks</h3>
+                <h3>© Web Vit 2026</h3>
+            </div>
+        </div>
+        <p> © 2026 Web Dev. All rights reserved</p>
+    </footer>
+
+</body>
+
+</html>

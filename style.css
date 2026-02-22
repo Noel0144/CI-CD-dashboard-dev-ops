@@ -118,6 +118,210 @@ footer{
     padding-right:16px;
 }
 
+/* css for build page*/
+.page-heading {
+    color: #ffffff;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    margin: 24px 0 6px;
+    max-width:100%;
+}
+.page-sub {
+    color: #ffffff;
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 30px;
+    max-width:100%;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 0 40px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background-color: #1a2535;
+    border: 1px solid #2a3a50;
+    border-radius: 12px;
+    padding: 20px 30px;
+    min-width: 150px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 38px;
+    font-weight: 900;
+    margin-bottom: 6px;
+}
+
+.stat-label {
+    color: #ffffff;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.teal   { 
+    color: #32e6e2; 
+}
+
+.green  { 
+    color: rgb(12, 235, 12); 
+}
+
+.red    { 
+    color: #ff4d4d; 
+}
+
+.yellow { 
+    color: #f5c518; 
+}
+
+td.green { color: rgb(12, 235, 12) !important; 
+    font-weight: 700; 
+}
+
+td.red  { 
+    color: #ff4d4d !important;          
+    font-weight: 700; 
+}
+
+td.yellow { 
+    color: #f5c518 !important;
+    font-weight: 700; 
+}
+
+.card {
+    background-color: #1a2535;
+    border: 1px solid #2a3a50;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.card h2 {
+    color: #32e6e2;
+    font-size: 17px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+}
+
+.build-wrap {
+    padding: 0 40px;
+    margin-bottom: 30px;
+}
+
+.build-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.build-table th {
+    color: #ffffff;
+    font-size: 13px;
+    text-transform: uppercase;
+    padding: 0 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #2a3a50;
+}
+
+.build-table td {
+    color: #ffffff;
+    font-size: 14px;
+    padding: 10px 8px;
+    border-bottom: 1px solid #1e2a38;
+}
+
+.build-table tr:last-child td { 
+    border-bottom: none; 
+}
+
+.branch-tag {
+    color: #32e6e2;
+    font-size: 13px;
+    font-family: monospace;
+}
+
+.perf-card {
+    background-color: #1a2535;
+    border: 1px solid #2a3a50;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 0 40px 30px;
+}
+
+.perf-card h2 {
+    color: #32e6e2;
+    font-size: 17px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+}
+
+.metrics-grid {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.metric-row {
+    flex: 1;
+    min-width: 200px;
+    margin-bottom: 16px;
+}
+
+.metric-label-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+.metric-label-row span:first-child{ 
+    color: #ffffff; 
+    font-size: 14px; 
+}
+
+.metric-label-row span:last-child { 
+    color: #32e6e2; 
+    font-size: 14px; 
+    font-weight: 700; 
+}
+
+.progress-track{
+    background-color: #2a3a50;
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+}
+
+.progress-fill{ 
+    height: 100%; 
+    border-radius: 999px; 
+}
+
+.fill-teal{ 
+    background-color: #32e6e2;
+}
+
+.fill-green{ 
+    background-color: rgb(12, 235, 12); 
+}
+
+.fill-yellow{ 
+    background-color: #f5c518; 
+}
+
+.fill-red{ 
+    background-color: #ff4d4d; 
+}
+
+
 /* Dashboard Enhancements */
 .container {
     padding: 2rem;
@@ -226,3 +430,5 @@ th {
     color: #ff4d4d;
     border: 1px solid rgba(255, 77, 77, 0.4);
 }
+
+

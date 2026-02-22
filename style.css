@@ -19,6 +19,13 @@ header:hover{
     justify-content: space-between;
     text-align: center;
 }
+#navbar-child{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 380px;
+}
+
 #child1{
     margin:8px;
 }
@@ -69,12 +76,12 @@ h1,p{
     color: #ffffff;
     font-family: Instrument Arial, Helvetica, sans-serif;
 }
-h1{
+.head{
     font-weight: 850;
     font-size: 50px;
     max-width: 450px;
 }
-p{
+.sub-head{
     font-weight: 400;
     font-size: 20px;
     max-width: 450px; 
@@ -430,5 +437,7 @@ th {
     color: #ff4d4d;
     border: 1px solid rgba(255, 77, 77, 0.4);
 }
-
+.feet{
+    text-align: center;
+}
 

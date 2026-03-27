@@ -1,112 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Health - CI/CD Pipeline</title>
+    <title>CI/CD Pipeline - Health</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
-
 <body>
-    <header>Dev Ops CI/CD Pipeline</header>
-    <nav id="navbar-child">
-        <div id="child1"> <img width="100"
-                src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="Logo">
+
+<header>Dev Ops CI/CD Pipeline</header>
+
+<nav id="navbar-child">
+    <div id="child1">
+        <img width="100" src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="logo">
+    </div>
+    <div id="child2" class="child2">
+        <a href="index.html">Home</a>
+        <a href="build.html">Build</a>
+        <a href="deploy.html">Deploy</a>
+        <a href="pipeline.html">Pipeline</a>
+        <a href="health.html">Health</a>
+    </div>
+</nav>
+
+<h1 class="page-heading">System Health</h1>
+
+<!-- STAT CARDS -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-number teal">4</div>
+        <div class="stat-label">Services</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number green">3</div>
+        <div class="stat-label">Healthy</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number yellow">1</div>
+        <div class="stat-label">Warning</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number red">0</div>
+        <div class="stat-label">Critical</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number teal">99.98%</div>
+        <div class="stat-label">Avg Uptime</div>
+    </div>
+</div>
+
+<!-- CHARTS ROW -->
+<div class="charts-row">
+    <div class="chart-card">
+        <div class="chart-title">Service Health Overview</div>
+        <div class="chart-box small">
+            <canvas id="donutChart"></canvas>
         </div>
-        <div id="child2" class="child2">
-            <a href="index.html">Home</a>
-            <a href="build.html">Build</a>
-            <a href="deploy.html">Deploy</a>
-            <a href="pipeline.html">Pipeline</a>
-            <a href="health.html">Health</a>
+    </div>
+    <div class="chart-card">
+        <div class="chart-title">Resource Utilization (%)</div>
+        <div class="chart-box large">
+            <canvas id="barChart"></canvas>
         </div>
-    </nav>
+    </div>
+</div>
 
-    <div class="container">
-        <h1 class="page-heading">System Health</h1>
-        <p class="page-sub">Real-time monitoring of infrastructure and application services.</p>
+<!-- TWO TOGGLE BUTTONS SIDE BY SIDE -->
+<div class="health-toggle-row">
+    <button class="toggle-btn" onclick="togglePanel('servicePanel', this)">&#11015; Service Details</button>
+    <button class="toggle-btn toggle-btn-alert" onclick="togglePanel('alertPanel', this)">&#9888; Active Alerts <span class="alert-badge">2</span></button>
+</div>
 
-        <div class="grid">
-            <div class="card">
-                <div class="card-title">
-                    API Gateway
-                    <span class="status-pill status-success">Online</span>
-                </div>
-                <div class="stat-value">99.98%</div>
-                <div class="stat-label">Uptime (Last 30d)</div>
-                <p>Latency: 45ms avg</p>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    Database Cluster
-                    <span class="status-pill status-success">Active</span>
-                </div>
-                <div class="stat-value">12.5%</div>
-                <div class="stat-label">CPU Utilization</div>
-                <p>Connections: 124 active</p>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    Authentication Service
-                    <span class="status-pill status-success">Healthy</span>
-                </div>
-                <div class="stat-value">18ms</div>
-                <div class="stat-label">Avg Response Time</div>
-                <p>Status: All nodes operational</p>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    Redis Cache
-                    <span class="status-pill status-warning">High Load</span>
-                </div>
-                <div class="stat-value">88.2%</div>
-                <div class="stat-label">Memory Usage</div>
-                <p>Eviction rate: 2.1/s</p>
-            </div>
-        </div>
-
-        <h2 style="color: #32e6e2; margin-top: 3rem;">Active Alerts</h2>
-        <div class="card" style="border-left: 4px solid #ffa500; margin-bottom: 1rem;">
-            <div style="display: flex; justify-content: space-between;">
-                <strong>Cache Memory Threshold</strong>
-                <span class="status-pill status-warning">Warning</span>
-            </div>
-            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Redis-01 memory usage exceeded 85%. Scaling may be
-                required.</p>
-            <span class="stat-label">Detected: 15 minutes ago</span>
-        </div>
-
-        <div class="card" style="border-left: 4px solid #0ceb0c;">
-            <div style="display: flex; justify-content: space-between;">
-                <strong>Database Backup Complete</strong>
-                <span class="status-pill status-success">Info</span>
-            </div>
-            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Daily automated backup for DB-Cluster successfully
-                archived to S3.</p>
-            <span class="stat-label">Timestamp: 2026-02-21 04:00</span>
+<!-- PANEL 1 — SERVICE DETAILS TABLE -->
+<div class="detail-panel" id="servicePanel">
+    <div class="build-wrap">
+        <div class="card">
+            <h2>Service Status</h2>
+            <table class="build-table">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Metric</th>
+                        <th>Status</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody id="serviceTableBody"></tbody>
+            </table>
         </div>
     </div>
 
-    <footer>
-        <div id="foot">
-            <div id="foot1" class="foot_child">
-                <h3>English(United States)</h3>
-                <h3>Your Privacy Choice</h3>
+    <!-- Infrastructure Performance Bars -->
+    <div class="perf-card">
+        <h2>Infrastructure Performance</h2>
+        <div class="perf-inline-grid">
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>API Uptime</span><span class="teal">99.98%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-teal" style="width:99.98%"></div></div>
             </div>
-            <div id="foot2" class="foot_child">
-                <h3>Ai Disclaimer</h3>
-                <h3>Terms of Use</h3>
-                <h3>Trademarks</h3>
-                <h3>© Web Vit 2026</h3>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>DB CPU Usage</span><span class="green">12.5%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-green" style="width:12.5%"></div></div>
+            </div>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Auth Response</span><span class="teal">18ms</span></div>
+                <div class="progress-track"><div class="progress-fill fill-teal" style="width:90%"></div></div>
+            </div>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Cache Memory</span><span class="yellow">88.2%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-yellow" style="width:88.2%"></div></div>
+            </div>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Overall Health</span><span class="green">94%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-green" style="width:94%"></div></div>
             </div>
         </div>
-        <p class="feet"> © 2026 Web Dev. All rights reserved</p>
-    </footer>
+    </div>
+</div>
 
+<!-- PANEL 2 — ACTIVE ALERTS -->
+<div class="detail-panel" id="alertPanel">
+    <div class="build-wrap">
+        <div class="card">
+            <h2>Active Alerts</h2>
+            <div id="alertList"></div>
+        </div>
+    </div>
+</div>
+
+<br><hr>
+
+<footer>
+    <div id="foot">
+        <div class="foot_child">
+            <h3>English (United States)</h3>
+            <h3>Your Privacy Choice</h3>
+        </div>
+        <div class="foot_child">
+            <h3>AI Disclaimer</h3>
+            <h3>Terms of Use</h3>
+            <h3>Trademarks</h3>
+            <h3>© Web Vit 2026</h3>
+        </div>
+    </div>
+    <p class="feet">© 2026 Web Dev. All rights reserved</p>
+</footer>
+
+<script src="health.js"></script>
 </body>
-
 </html>

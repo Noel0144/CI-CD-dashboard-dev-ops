@@ -443,7 +443,7 @@ th {
     text-align: center;
 }
 
-/* ===== BUILD PAGE ADDON — paste at bottom of style.css ===== */
+/* ===== BUILD PAGE ADDON ===== */
 
 .page-sub {
     text-align: center;
@@ -499,7 +499,7 @@ th {
 .detail-panel         { display: none; padding: 0 32px 32px; }
 .detail-panel.visible { display: block; }
 
-/* ── Simple Build Table (4 cols) ── */
+/* ── Build / Deploy Table Card ── */
 .build-wrap {
     margin-bottom: 24px;
 }
@@ -517,12 +517,14 @@ th {
     text-transform: uppercase;
     margin: 0 0 20px;
 }
+
+/* ── Shared table base ── */
 .build-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 16px;
+    font-size: 15px;
     color: #ddd;
-    table-layout: fixed;
+    table-layout: fixed;   /* fixed so our % widths are respected */
 }
 .build-table th {
     text-align: left;
@@ -531,26 +533,42 @@ th {
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 0 20px 14px 20px;
+    padding: 0 16px 14px 16px;
     border-bottom: 1px solid #2a3a50;
 }
 .build-table td {
-    padding: 16px 20px;
+    padding: 14px 16px;
     border-bottom: 1px solid #1a2535;
     vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
-/* Column width distribution across full width */
-.build-table th:nth-child(1),
-.build-table td:nth-child(1) { width: 15%; }
-.build-table th:nth-child(2),
-.build-table td:nth-child(2) { width: 40%; }
-.build-table th:nth-child(3),
-.build-table td:nth-child(3) { width: 25%; }
-.build-table th:nth-child(4),
-.build-table td:nth-child(4) { width: 20%; }
 .build-table tbody tr:last-child td {
     border-bottom: none;
 }
+
+/* ── 4-column layout (build page) ── */
+.build-table.cols-4 th:nth-child(1),
+.build-table.cols-4 td:nth-child(1) { width: 15%; }
+.build-table.cols-4 th:nth-child(2),
+.build-table.cols-4 td:nth-child(2) { width: 40%; }
+.build-table.cols-4 th:nth-child(3),
+.build-table.cols-4 td:nth-child(3) { width: 25%; }
+.build-table.cols-4 th:nth-child(4),
+.build-table.cols-4 td:nth-child(4) { width: 20%; }
+
+/* ── 5-column layout (deploy page) ── */
+.build-table.cols-5 th:nth-child(1),
+.build-table.cols-5 td:nth-child(1) { width: 15%; }   /* Environment */
+.build-table.cols-5 th:nth-child(2),
+.build-table.cols-5 td:nth-child(2) { width: 25%; }   /* Version     */
+.build-table.cols-5 th:nth-child(3),
+.build-table.cols-5 td:nth-child(3) { width: 20%; }   /* Status      */
+.build-table.cols-5 th:nth-child(4),
+.build-table.cols-5 td:nth-child(4) { width: 18%; }   /* Duration    */
+.build-table.cols-5 th:nth-child(5),
+.build-table.cols-5 td:nth-child(5) { width: 22%; }   /* Timestamp   */
 
 /* ── Branch Tag ── */
 .branch-tag {
@@ -565,7 +583,17 @@ th {
 .status-warning { background: rgba(245,197,24,0.12); color: #f5c518; border: 1px solid #f5c518; }
 .status-error   { background: rgba(255,77,77,0.12);  color: #ff4d4d; border: 1px solid rgba(255,77,77,0.5); }
 
-/* ── Build Performance Card (inline horizontal) ── */
+/* ── Timestamp cell ── */
+.timestamp-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #aab4c4;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+/* ── Build Performance Card ── */
 .perf-card {
     background: #111b27;
     border: 1px solid #2a3a50;
@@ -581,13 +609,11 @@ th {
     margin: 0 0 24px;
 }
 
-/* 5-column inline grid matching Image 2 */
 .perf-inline-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 0 28px;
 }
-.perf-inline-item {}
 .perf-inline-label {
     display: flex;
     justify-content: space-between;
@@ -625,7 +651,81 @@ th {
     .charts-row .chart-card:first-child { flex: unset; }
     .perf-inline-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
     .detail-panel { padding: 0 16px 24px; }
+    .build-table { font-size: 13px; }
+    .build-table th, .build-table td { padding: 10px 10px; }
 }
 @media (max-width: 500px) {
     .perf-inline-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== HEALTH PAGE ADDON — paste at bottom of style.css ===== */
+
+/* ── Dual toggle button row ── */
+.health-toggle-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 8px 0 20px;
+}
+
+/* Alert button variant — outlined teal with orange accent on badge */
+.toggle-btn-alert {
+    background: #ffa500;
+    border-color: #ffa500;
+    color: #12181f;
+    position: relative;
+}
+.toggle-btn-alert:hover {
+    background: transparent;
+    color: #ffa500;
+}
+
+/* Alert count badge on the button */
+.alert-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffa500;
+    color: #12181f;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+.toggle-btn-alert:hover .alert-badge {
+    background: #12181f;
+    color: #ffa500;
+}
+
+/* ── Alert items inside the panel ── */
+.alert-item {
+    background: #0e1923;
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+}
+.alert-item:last-child { margin-bottom: 0; }
+
+.alert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #fff;
+}
+
+.alert-msg {
+    font-size: 14px;
+    color: #a0aec0;
+    margin: 0 0 8px;
+    line-height: 1.6;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .health-toggle-row { flex-direction: column; align-items: center; }
 }

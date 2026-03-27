@@ -1,126 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deployment Status - CI/CD Pipeline</title>
+    <title>CI/CD Pipeline - Deploy</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
-
 <body>
-    <header>Dev Ops CI/CD Pipeline</header>
-    <nav id="navbar-child">
-        <div id="child1"> <img width="100"
-                src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="Logo">
+
+<header>Dev Ops CI/CD Pipeline</header>
+
+<nav id="navbar-child">
+    <div id="child1">
+        <img width="100" src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="logo">
+    </div>
+    <div id="child2" class="child2">
+        <a href="index.html">Home</a>
+        <a href="build.html">Build</a>
+        <a href="deploy.html">Deploy</a>
+        <a href="pipeline.html">Pipeline</a>
+        <a href="health.html">Health</a>
+    </div>
+</nav>
+
+<h1 class="page-heading">Deployment Status</h1>
+<p class="page-sub">Monitor and manage your application deployments across environments</p>
+
+<!-- STAT CARDS -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-number teal">3</div>
+        <div class="stat-label">Environments</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number green">2</div>
+        <div class="stat-label">Live</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number yellow">1</div>
+        <div class="stat-label">Deploying</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number teal">v2.4.0</div>
+        <div class="stat-label">Prod Version</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number teal">4m 12s</div>
+        <div class="stat-label">Avg Deploy Time</div>
+    </div>
+</div>
+
+<!-- CHARTS ROW -->
+<div class="charts-row">
+    <div class="chart-card">
+        <div class="chart-title">Deployment Outcomes</div>
+        <div class="chart-box small">
+            <canvas id="donutChart"></canvas>
         </div>
-        <div id="child2" class="child2">
-            <a href="index.html">Home</a>
-            <a href="build.html">Build</a>
-            <a href="deploy.html">Deploy</a>
-            <a href="pipeline.html">Pipeline</a>
-            <a href="health.html">Health</a>
+    </div>
+    <div class="chart-card">
+        <div class="chart-title">Deploy Duration Trend (seconds)</div>
+        <div class="chart-box large">
+            <canvas id="barChart"></canvas>
         </div>
-    </nav>
+    </div>
+</div>
 
-    <div class="container">
-        <h1 class="page-heading">Deployment Status</h1>
-        <p class="page-sub">Monitor and manage your application deployments across environments.</p>
+<!-- TOGGLE BUTTON -->
+<div style="text-align:center; margin: 8px 0 20px;">
+    <button class="toggle-btn" onclick="toggleDetail(this)">&#11015; View Details</button>
+</div>
 
-        <div class="grid">
-            <div class="card">
-                <div class="card-title">
-                    Production
-                    <span class="status-pill status-success">Live</span>
-                </div>
-                <div class="stat-value">v2.4.0</div>
-                <div class="stat-label">Last deployed: 2 hours ago</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 100%;"></div>
-                </div>
-                <p>Health: 100% stable</p>
-            </div>
+<!-- DETAIL PANEL -->
+<div class="detail-panel" id="detailPanel">
 
-            <div class="card">
-                <div class="card-title">
-                    Staging
-                    <span class="status-pill status-warning">Deploying</span>
-                </div>
-                <div class="stat-value">v2.5.0-rc1</div>
-                <div class="stat-label">Deployment in progress...</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 65%;"></div>
-                </div>
-                <p>Traffic: Internal Only</p>
-            </div>
-
-            <div class="card">
-                <div class="card-title">
-                    QA Environment
-                    <span class="status-pill status-success">Ready</span>
-                </div>
-                <div class="stat-value">v2.5.0-beta</div>
-                <div class="stat-label">Last deployed: 1 day ago</div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 100%;"></div>
-                </div>
-                <p>Tests: 100% Passed</p>
-            </div>
+    <!-- Recent Deployments Table -->
+    <div class="build-wrap">
+        <div class="card">
+            <h2>Recent Deployments</h2>
+            <table class="build-table cols-5">
+                <thead>
+                    <tr>
+                        <th>Environment</th>
+                        <th>Version</th>
+                        <th>Status</th>
+                        <th>Duration</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="deployTableBody"></tbody>
+            </table>
         </div>
-
-        <h2 style="color: #32e6e2; margin-top: 3rem;">Recent Deployments</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Environment</th>
-                    <th>Version</th>
-                    <th>Status</th>
-                    <th>Duration</th>
-                    <th>Timestamp</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Production</td>
-                    <td>v2.4.0</td>
-                    <td>Success</td>
-                    <td>4m 12s</td>
-                    <td>2026-02-21 13:30</td>
-                </tr>
-                <tr>
-                    <td>Staging</td>
-                    <td>v2.4.0</td>
-                    <td>Success</td>
-                    <td>3m 45s</td>
-                    <td>2026-02-21 12:15</td>
-                </tr>
-                <tr>
-                    <td>Production</td>
-                    <td>v2.3.9</td>
-                    <td>Success</td>
-                    <td>4m 05s</td>
-                    <td>2026-02-20 18:45</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 
-    <footer>
-        <div id="foot">
-            <div id="foot1" class="foot_child">
-                <h3>English(United States)</h3>
-                <h3>Your Privacy Choice</h3>
+    <!-- Deploy Performance Metrics -->
+    <div class="perf-card">
+        <h2>Deployment Performance</h2>
+        <div class="perf-inline-grid">
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Success Rate</span><span class="teal">91%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-teal" style="width:91%"></div></div>
             </div>
-            <div id="foot2" class="foot_child">
-                <h3>Ai Disclaimer</h3>
-                <h3>Terms of Use</h3>
-                <h3>Trademarks</h3>
-                <h3>© Web Vit 2026</h3>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Prod Stability</span><span class="green">100%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
+            </div>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Rollback Rate</span><span class="red">4%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-red" style="width:4%"></div></div>
+            </div>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Deploy Frequency</span><span class="yellow">68%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-yellow" style="width:68%"></div></div>
+            </div>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>QA Pass Rate</span><span class="green">100%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
             </div>
         </div>
-        <p class="feet"> © 2026 Web Dev. All rights reserved</p>
-    </footer>
+    </div>
 
+</div>
+
+<br><hr>
+
+<footer>
+    <div id="foot">
+        <div class="foot_child">
+            <h3>English (United States)</h3>
+            <h3>Your Privacy Choice</h3>
+        </div>
+        <div class="foot_child">
+            <h3>AI Disclaimer</h3>
+            <h3>Terms of Use</h3>
+            <h3>Trademarks</h3>
+            <h3>© Web Vit 2026</h3>
+        </div>
+    </div>
+    <p class="feet">© 2026 Web Dev. All rights reserved</p>
+</footer>
+
+<script src="deploy.js"></script>
 </body>
-
 </html>

@@ -1,23 +1,40 @@
-// ─── RAW BUILD DATA ──────────────────────────────────────────
-const allBuilds = [
-    { id: 119, branch: 'main',    status: 'Passed',  duration: 145 },
-    { id: 120, branch: 'dev',     status: 'Passed',  duration: 160 },
-    { id: 121, branch: 'main',    status: 'Failed',  duration: 170 },
-    { id: 122, branch: 'feature', status: 'Passed',  duration: 130 },
-    { id: 123, branch: 'main',    status: 'Running', duration: 150 },
-    { id: 124, branch: 'dev',     status: 'Passed',  duration: 130 },
-    { id: 125, branch: 'main',    status: 'Failed',  duration: 180 },
-    { id: 126, branch: 'feature', status: 'Passed',  duration: 140 },
-    { id: 127, branch: 'dev',     status: 'Passed',  duration: 160 },
-    { id: 128, branch: 'main',    status: 'Passed',  duration: 70  },
-];
+const REPO = localStorage.getItem('targetRepo') || 'defxharsh/CI-CD-Pipeline-DevOps-';
+const TOKEN = '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';
+const HEADERS = { 'Authorization': `token ${TOKEN}` };
 
-// ─── CHARTS ──────────────────────────────────────────────────
 let donutChart, barChart;
 
+async function fetchBuilds() {
+    try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}/actions/runs?per_page=15`, { headers: HEADERS });
+        if (!res.ok) return [];
+        const data = await res.json();
+
+        return data.workflow_runs.map(run => {
+            let status = 'Running';
+            if (run.status === 'completed') {
+                status = run.conclusion === 'success' ? 'Passed' : 'Failed';
+            }
+            const start = new Date(run.created_at).getTime();
+            const end = new Date(run.updated_at).getTime();
+            const durationSecs = Math.floor((end - start) / 1000);
+
+            return {
+                id: run.run_number,
+                branch: run.head_branch,
+                status: status,
+                duration: durationSecs > 0 ? durationSecs : 0
+            };
+        });
+    } catch (e) {
+        console.error("Error fetching builds:", e);
+        return [];
+    }
+}
+
 function initCharts(builds) {
-    const passed  = builds.filter(b => b.status === 'Passed').length;
-    const failed  = builds.filter(b => b.status === 'Failed').length;
+    const passed = builds.filter(b => b.status === 'Passed').length;
+    const failed = builds.filter(b => b.status === 'Failed').length;
     const running = builds.filter(b => b.status === 'Running').length;
 
     if (donutChart) donutChart.destroy();
@@ -33,15 +50,8 @@ function initCharts(builds) {
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '55%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { color: '#ddd', font: { size: 12 }, padding: 12 }
-                }
-            }
+            responsive: true, maintainAspectRatio: false, cutout: '55%',
+            plugins: { legend: { position: 'bottom', labels: { color: '#ddd', font: { size: 12 }, padding: 12 } } }
         }
     });
 
@@ -54,16 +64,14 @@ function initCharts(builds) {
                 label: 'Duration (s)',
                 data: builds.map(b => b.duration),
                 backgroundColor: builds.map(b =>
-                    b.status === 'Failed'  ? '#ff4d4d' :
-                    b.status === 'Running' ? '#f5c518' : '#32e6e2'
+                    b.status === 'Failed' ? '#ff4d4d' :
+                        b.status === 'Running' ? '#f5c518' : '#32e6e2'
                 ),
                 borderRadius: 5
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
             scales: {
                 x: { ticks: { color: '#aaa', font: { size: 12 } }, grid: { color: '#1e2a38' } },
                 y: { ticks: { color: '#aaa', font: { size: 12 } }, grid: { color: '#1e2a38' } }
@@ -72,26 +80,38 @@ function initCharts(builds) {
     });
 }
 
-// ─── KPI UPDATE ───────────────────────────────────────────────
 function updateKPIs(builds) {
+    const passed = builds.filter(b => b.status === 'Passed').length;
+    const failed = builds.filter(b => b.status === 'Failed').length;
+    const running = builds.filter(b => b.status === 'Running').length;
+    let avgDur = 0;
+    if (builds.length > 0) {
+        avgDur = Math.floor(builds.reduce((sum, b) => sum + b.duration, 0) / builds.length);
+    }
+    const mins = Math.floor(avgDur / 60);
+    const secs = avgDur % 60;
+
     document.getElementById('kpi-total').textContent = builds.length;
-    document.getElementById('kpi-pass').textContent  = builds.filter(b => b.status === 'Passed').length;
-    document.getElementById('kpi-fail').textContent  = builds.filter(b => b.status === 'Failed').length;
-    document.getElementById('kpi-run').textContent   = builds.filter(b => b.status === 'Running').length;
+    document.getElementById('kpi-pass').textContent = passed;
+    document.getElementById('kpi-fail').textContent = failed;
+    document.getElementById('kpi-run').textContent = running;
+
+    // Select the 5th stat card for avg duration
+    const statCards = document.querySelectorAll('.stat-number');
+    if (statCards.length >= 5) {
+        statCards[4].textContent = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+    }
 }
 
-// ─── TABLE — 4 columns only ───────────────────────────────────
 function buildTable(builds) {
     const tbody = document.getElementById('buildTableBody');
     tbody.innerHTML = '';
     builds.forEach(b => {
-        const pill = b.status === 'Passed'  ? 'status-success' :
-                     b.status === 'Failed'  ? 'status-error'   : 'status-warning';
-
-        // format duration as Xm Ys
+        const pill = b.status === 'Passed' ? 'status-success' :
+            b.status === 'Failed' ? 'status-error' : 'status-warning';
         const mins = Math.floor(b.duration / 60);
         const secs = b.duration % 60;
-        const dur  = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+        const dur = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
 
         tbody.innerHTML += `
           <tr>
@@ -103,15 +123,26 @@ function buildTable(builds) {
     });
 }
 
-// ─── TOGGLE DETAIL PANEL ─────────────────────────────────────
 function toggleDetail(btn) {
     const panel = document.getElementById('detailPanel');
-    const open  = panel.classList.toggle('visible');
+    const open = panel.classList.toggle('visible');
     btn.textContent = open ? '⬆ Hide Details' : '⬇ View Details';
 }
 
-// ─── INIT ─────────────────────────────────────────────────────
-const latest10 = allBuilds.slice(-10);
-initCharts(latest10);
-updateKPIs(latest10);
-buildTable(latest10);
+async function init() {
+    const builds = await fetchBuilds();
+    if (builds.length > 0) {
+        // Reverse so the newest is at the end of the chart, or keep as is
+        initCharts(builds);
+        updateKPIs(builds);
+        buildTable(builds);
+    } else {
+        // Fallback UI or empty state
+        document.getElementById('kpi-total').textContent = "0";
+        document.getElementById('kpi-pass').textContent = "0";
+        document.getElementById('kpi-fail').textContent = "0";
+        document.getElementById('kpi-run').textContent = "0";
+    }
+}
+
+init();

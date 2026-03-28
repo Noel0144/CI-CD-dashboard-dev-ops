@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CI/CD Pipeline</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>Dev Ops CI/CD Pipeline</header>
+    <nav id="navbar-child">
+        <div id="child1">
+            <img width="100" src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="logo">
+        </div>
+        <div id="child2" class="child2">
+            <a href="index.html">Home</a>
+        </div>
+    </nav>
+
+    <div style="display: flex; justify-content: center; margin-top: 50px;">
+        <div class="card" style="width: 400px; text-align: center;">
+            <h2 style="color: #32e6e2; margin-bottom: 20px;">GitHub Login</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">Enter your GitHub username to access the dashboard.</p>
+            <input type="text" id="usernameInput" placeholder="GitHub Username" style="padding: 10px; width: 80%; margin-bottom: 20px; border-radius: 5px; border: 1px solid #2a3a50; background-color: #0e1923; color: white; display: inline-block;">
+            <br>
+            <button id="loginBtn" class="btn_primary" style="width: 80%;">Login</button>
+            <p id="errorMsg" style="color: #ff4d4d; margin-top: 15px; display: none;">User not found or API limits reached. Try again.</p>
+        </div>
+    </div>
+    
+    <script src="login.js"></script>
+</body>
+</html>

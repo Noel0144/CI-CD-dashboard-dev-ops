@@ -1,97 +1,118 @@
-// ─── SERVICE DATA ─────────────────────────────────────────────
-const services = [
-    { name: 'API Gateway',            metric: 'Uptime (30d)',     status: 'Online',    value: '99.98%  |  45ms avg latency' },
-    { name: 'Database Cluster',       metric: 'CPU Utilization',  status: 'Active',    value: '12.5%  |  124 active connections' },
-    { name: 'Authentication Service', metric: 'Avg Response',     status: 'Healthy',   value: '18ms  |  All nodes operational' },
-    { name: 'Redis Cache',            metric: 'Memory Usage',     status: 'High Load', value: '88.2%  |  Eviction rate 2.1/s' },
-];
+const REPO = localStorage.getItem('targetRepo') || 'defxharsh/CI-CD-Pipeline-DevOps-';
+const TOKEN = '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';
+const HEADERS = { 'Authorization': `token ${TOKEN}` };
 
-// ─── ALERT DATA ───────────────────────────────────────────────
-const alerts = [
-    {
-        title:     'Cache Memory Threshold',
-        severity:  'warning',
-        message:   'Redis-01 memory usage exceeded 85%. Scaling may be required.',
-        timestamp: 'Detected: 15 minutes ago',
-    },
-    {
-        title:     'Database Backup Complete',
-        severity:  'success',
-        message:   'Daily automated backup for DB-Cluster successfully archived to S3.',
-        timestamp: 'Timestamp: 2026-02-21 04:00',
-    },
-];
-
-// ─── CHARTS ──────────────────────────────────────────────────
 let donutChart, barChart;
 
-function initCharts() {
-    // Donut — healthy / warning / critical
+async function fetchHealthData() {
+    try {
+        // Fetch repository issues to simulate alerts
+        const issueRes = await fetch(`https://api.github.com/repos/${REPO}/issues?state=open&per_page=5`, { headers: HEADERS });
+        let issues = [];
+        if (issueRes.ok) {
+            issues = await issueRes.json();
+        }
+
+        // Fetch rate limit as a dynamic metric
+        const rlRes = await fetch(`https://api.github.com/rate_limit`, { headers: HEADERS });
+        let rateLimit = { resources: { core: { limit: 5000, remaining: 5000 } } };
+        if (rlRes.ok) {
+            rateLimit = await rlRes.json();
+        }
+
+        const metrics = [
+            { name: 'GitHub API Rate Limit', metric: 'Remaining Requests', status: rateLimit.resources.core.remaining > 1000 ? 'Healthy' : 'Warning', value: `${rateLimit.resources.core.remaining} / ${rateLimit.resources.core.limit}` },
+            { name: 'Repository Issues', metric: 'Open Issues', status: issues.length > 0 ? 'Warning' : 'Healthy', value: `${issues.length} active issues` },
+            { name: 'Authentication Layer', metric: 'Avg Response', status: 'Healthy', value: '25ms | OK' },
+            { name: 'Frontend Hosting', metric: 'Availability', status: 'Online', value: '99.9% Uptime' }
+        ];
+
+        const alerts = issues.map(iss => ({
+            title: `Issue #${iss.number}: ${iss.title}`,
+            severity: iss.labels && iss.labels.find(l => l.name.toLowerCase().includes('bug')) ? 'critical' : 'warning',
+            message: iss.body ? iss.body.substring(0, 50) + '...' : 'No description provided.',
+            timestamp: `Created: ${new Date(iss.created_at).toLocaleString()}`
+        }));
+
+        if (alerts.length === 0) {
+            alerts.push({
+                title: 'System Stable',
+                severity: 'success',
+                message: 'No open issues detected in the repository.',
+                timestamp: 'Last checked just now'
+            });
+        }
+
+        return {
+            services: metrics,
+            alerts: alerts
+        };
+
+    } catch (e) {
+        console.error("Error fetching health data:", e);
+        return { services: [], alerts: [] };
+    }
+}
+
+function initCharts(data) {
+    const services = data.services || [];
+    const healthy = services.filter(s => s.status === 'Healthy' || s.status === 'Online').length;
+    const warning = services.filter(s => s.status === 'Warning').length;
+    const critical = services.filter(s => s.status === 'Critical').length;
+
+    const statCards = document.querySelectorAll('.stat-number');
+    if (statCards.length >= 5) {
+        statCards[0].textContent = services.length;
+        statCards[1].textContent = healthy;
+        statCards[2].textContent = warning;
+        statCards[3].textContent = critical;
+        statCards[4].textContent = '99.98%'; // Mock avg uptime
+    }
+
     if (donutChart) donutChart.destroy();
     donutChart = new Chart(document.getElementById('donutChart'), {
         type: 'doughnut',
         data: {
             labels: ['Healthy', 'Warning', 'Critical'],
             datasets: [{
-                data: [3, 1, 0],
+                data: [healthy, warning, critical],
                 backgroundColor: ['#0ceb0c', '#f5c518', '#ff4d4d'],
-                borderWidth: 2,
-                borderColor: '#1a2535'
+                borderWidth: 2, borderColor: '#1a2535'
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '55%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { color: '#ddd', font: { size: 12 }, padding: 12 }
-                }
-            }
+            responsive: true, maintainAspectRatio: false, cutout: '55%',
+            plugins: { legend: { position: 'bottom', labels: { color: '#ddd', font: { size: 12 }, padding: 12 } } }
         }
     });
 
-    // Bar — resource utilization per service
     if (barChart) barChart.destroy();
     barChart = new Chart(document.getElementById('barChart'), {
         type: 'bar',
         data: {
-            labels: ['API Gateway', 'DB Cluster', 'Auth Service', 'Redis Cache'],
+            labels: services.map(s => s.name.substring(0, 10)),
             datasets: [{
-                label: 'Utilization %',
-                data: [1, 12.5, 9, 88.2],   // normalized/representative values
-                backgroundColor: ['#32e6e2', '#32e6e2', '#32e6e2', '#f5c518'],
+                label: 'Load / Utilization',
+                data: [45, 12, 8, 30], // Mock utilization
+                backgroundColor: ['#32e6e2', '#32e6e2', '#f5c518', '#32e6e2'],
                 borderRadius: 5
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
             scales: {
                 x: { ticks: { color: '#aaa', font: { size: 12 } }, grid: { color: '#1e2a38' } },
-                y: {
-                    ticks: { color: '#aaa', font: { size: 12 } },
-                    grid: { color: '#1e2a38' },
-                    max: 100
-                }
+                y: { ticks: { color: '#aaa', font: { size: 12 } }, grid: { color: '#1e2a38' }, max: 100 }
             }
         }
     });
 }
 
-// ─── SERVICE TABLE ────────────────────────────────────────────
-function buildServiceTable() {
+function buildServiceTable(services) {
     const tbody = document.getElementById('serviceTableBody');
     tbody.innerHTML = '';
     services.forEach(s => {
-        const pillClass = s.status === 'Online'  || s.status === 'Active' || s.status === 'Healthy'
-            ? 'status-success'
-            : s.status === 'High Load'
-            ? 'status-warning'
-            : 'status-error';
-
+        const pillClass = s.status === 'Online' || s.status === 'Healthy' ? 'status-success' : s.status === 'Warning' ? 'status-warning' : 'status-error';
         tbody.innerHTML += `
           <tr>
             <td>${s.name}</td>
@@ -102,20 +123,24 @@ function buildServiceTable() {
     });
 }
 
-// ─── ALERTS ───────────────────────────────────────────────────
-function buildAlerts() {
+function buildAlerts(alerts) {
     const container = document.getElementById('alertList');
     container.innerHTML = '';
+
+    // Update Notification Badge
+    const alertBtns = document.querySelectorAll('.toggle-btn-alert .alert-badge');
+    if (alertBtns.length > 0) alertBtns[0].textContent = alerts.filter(a => a.severity !== 'success').length;
+
     alerts.forEach(a => {
-        const borderColor = a.severity === 'warning' ? '#ffa500' : '#0ceb0c';
-        const pillClass   = a.severity === 'warning' ? 'status-warning' : 'status-success';
-        const pillLabel   = a.severity === 'warning' ? 'Warning' : 'Info';
+        const borderColor = a.severity === 'warning' ? '#f5c518' : a.severity === 'critical' ? '#ff4d4d' : '#0ceb0c';
+        const pillClass = a.severity === 'warning' ? 'status-warning' : a.severity === 'critical' ? 'status-error' : 'status-success';
+        const pillLabel = a.severity;
 
         container.innerHTML += `
           <div class="alert-item" style="border-left: 4px solid ${borderColor};">
               <div class="alert-header">
                   <strong>${a.title}</strong>
-                  <span class="status-pill ${pillClass}">${pillLabel}</span>
+                  <span class="status-pill ${pillClass}">${pillLabel.toUpperCase()}</span>
               </div>
               <p class="alert-msg">${a.message}</p>
               <span class="stat-label">${a.timestamp}</span>
@@ -123,22 +148,25 @@ function buildAlerts() {
     });
 }
 
-// ─── TOGGLE — independent panels ─────────────────────────────
 function togglePanel(panelId, btn) {
     const panel = document.getElementById(panelId);
-    const open  = panel.classList.toggle('visible');
+    const open = panel.classList.toggle('visible');
 
     if (panelId === 'servicePanel') {
-        btn.textContent = open ? '⬆ Service Details' : '⬇ Service Details';
-        if (open) btn.innerHTML = '⬆ Service Details';
-        else      btn.innerHTML = '&#11015; Service Details';
+        const arrow = open ? '⬆' : '⬇';
+        btn.innerHTML = `${arrow} Service Details`;
     } else {
-        if (open) btn.innerHTML = '⬆ Active Alerts <span class="alert-badge">2</span>';
-        else      btn.innerHTML = '&#9888; Active Alerts <span class="alert-badge">2</span>';
+        const arrow = open ? '⬆' : '&#9888;';
+        const badgeCount = document.querySelector('.alert-badge') ? document.querySelector('.alert-badge').textContent : '0';
+        btn.innerHTML = `${arrow} Active Alerts <span class="alert-badge">${badgeCount}</span>`;
     }
 }
 
-// ─── INIT ─────────────────────────────────────────────────────
-initCharts();
-buildServiceTable();
-buildAlerts();
+async function init() {
+    const data = await fetchHealthData();
+    initCharts(data);
+    buildServiceTable(data.services);
+    buildAlerts(data.alerts);
+}
+
+init();

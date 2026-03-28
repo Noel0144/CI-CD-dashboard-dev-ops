@@ -6,12 +6,13 @@
     <title>CI/CD Pipeline - Health</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="auth.js"></script>
 </head>
 <body>
 
 <header>Dev Ops CI/CD Pipeline</header>
 
-<nav id="navbar-child">
+<nav id="navbar">
     <div id="child1">
         <img width="100" src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="logo">
     </div>
@@ -21,8 +22,22 @@
         <a href="deploy.html">Deploy</a>
         <a href="pipeline.html">Pipeline</a>
         <a href="health.html">Health</a>
+        <a href="fetch.html">Fetch Repo</a>
+    </div>
+    <div id="child3">
+        <span id="nav-username" style="color: white; font-weight: bold; margin-right: 15px;"></span>
+        <button class="btn" style="background-color: #ff4d4d; width: auto; padding: 0 10px;" onclick="logout()">Log out</button>
     </div>
 </nav>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const user = localStorage.getItem('githubUser');
+        if (user) {
+            const userData = JSON.parse(user);
+            document.getElementById('nav-username').textContent = `Hi, ${userData.login}`;
+        }
+    });
+</script>
 
 <h1 class="page-heading">System Health</h1>
 

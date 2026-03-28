@@ -12,26 +12,37 @@
         <div id="child1"> <img width="100" src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="Logo">
         </div>
         <div id="child2" class="child2">
+            <a href="index.html">Home</a>
             <a href="build.html">Build</a>
             <a href="deploy.html">Deploy</a>
             <a href="pipeline.html">Pipeline</a>
             <a href="health.html">Health</a>
+            <a href="fetch.html">Fetch Repo</a>
         </div>
         <div id="child3">
-            <button id="btn1" class="btn">Log in</button>
-            <button id="btn2" class="btn">Sign up</button>
+            <a href="login.html"><button id="btn1" class="btn">Log in</button></a>
         </div>
     </nav>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = localStorage.getItem('githubUser');
+            if (user) {
+                const userData = JSON.parse(user);
+                const child3 = document.getElementById('child3');
+                child3.innerHTML = `
+                    <span style="color: white; font-weight: bold; margin-right: 15px;">Hi, ${userData.login}</span>
+                    <a href="pipeline.html"><button class="btn" style="background-color: #32e6e2; width: auto; padding: 0 10px;">Dashboard</button></a>
+                    <button class="btn" style="background-color: #ff4d4d; width: auto; padding: 0 10px;" onclick="logout()">Log out</button>
+                `;
+            }
+        });
+    </script>
     
     <section id="hero">
         <div>
             <h1 class="head">Build. Test. Deploy. Repeat.</h1>
             <p class="sub-head">Streamline your CI/CD workflow with automated pipelines and real-time monitoring.</p>
-            
-            <div class="hero_buttons">
-                <button class="btn_primary">Get Started</button>
-                <button class="btn_secondary">View Pipeline</button>
-            </div>
         </div>
         <div class="hero_animation">
             <iframe src="https://defxharsh.github.io/logo_link/cicd-animation.html"> </iframe>

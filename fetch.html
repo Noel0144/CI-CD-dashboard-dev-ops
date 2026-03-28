@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Repo Data - CI/CD Pipeline</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
+</head>
+<body>
+    <header>Dev Ops CI/CD Pipeline</header>
+    <nav id="navbar">
+        <div id="child1">
+            <img width="100" src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="logo">
+        </div>
+        <div id="child2" class="child2">
+            <a href="index.html">Home</a>
+            <a href="build.html">Build</a>
+            <a href="deploy.html">Deploy</a>
+            <a href="pipeline.html">Pipeline</a>
+            <a href="health.html">Health</a>
+            <a href="fetch.html">Fetch Repo</a>
+        </div>
+        <div id="child3">
+            <span id="nav-username" style="color: white; font-weight: bold; margin-right: 15px;"></span>
+            <button class="btn" style="background-color: #ff4d4d; width: auto; padding: 0 10px;" onclick="logout()">Log out</button>
+        </div>
+    </nav>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = localStorage.getItem('githubUser');
+            if (user) {
+                const userData = JSON.parse(user);
+                document.getElementById('nav-username').textContent = `Hi, ${userData.login}`;
+            }
+        });
+    </script>
+
+    <div style="display: flex; justify-content: center; margin-top: 50px;">
+        <div class="card" style="width: 500px; text-align: center;">
+            <h2 style="color: #32e6e2; margin-bottom: 20px;">Fetch Repository Data</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">Enter a GitHub username, repository name (owner/repo), or repository link to fetch and download its real-time data.</p>
+            <input type="text" id="repoInput" placeholder="e.g. facebook/react or https://github.com/..." style="padding: 10px; width: 80%; margin-bottom: 20px; border-radius: 5px; border: 1px solid #2a3a50; background-color: #0e1923; color: white; display: inline-block;">
+            <br>
+            <button id="fetchBtn" class="btn_primary" style="width: 80%;">Fetch & Download Data</button>
+            <p id="statusMsg" style="margin-top: 15px; display: none;"></p>
+        </div>
+    </div>
+    
+    <script src="fetch.js"></script>
+</body>
+</html>

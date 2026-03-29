@@ -1610,3 +1610,50 @@ th {
 /* Slightly tighter toggle rows */
 .health-toggle-row,
 .pipeline-toggle-row { margin: 6px 0 14px; }
+/* ===== SPA core ===== */
+.page-section         { display: none; }
+.page-section.active  { display: block; }
+
+/* ===== Dashboard tabs ===== */
+.dash-tab-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px 24px 0;
+  border-bottom: 2px solid #2a3a50;
+  margin-bottom: 10px;
+}
+.dash-tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #aaa;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 8px 22px;
+  cursor: pointer;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.dash-tab:hover       { color: #32e6e2; }
+.dash-tab.active-tab  { color: #32e6e2; border-bottom-color: #32e6e2; }
+
+.dash-tab-content              { display: none; }
+.dash-tab-content.active-tab-content { display: block; }
+
+/* ===== Active nav link ===== */
+.nav-active {
+  color: #32e6e2 !important;
+  border-bottom: 2px solid #32e6e2;
+  padding-bottom: 4px;
+}
+
+/* ===== Condense cards and charts to reduce scrolling ===== */
+.stat-card    { padding: 8px 16px; min-width: 110px; }
+.stat-number  { font-size: 24px; margin-bottom: 3px; }
+.stat-label   { font-size: 11px; }
+.stats-row    { gap: 10px; margin-bottom: 10px; padding: 0 20px; }
+.page-heading { font-size: 22px; margin: 10px 0 2px; }
+.page-sub     { font-size: 13px; margin-bottom: 8px; }
+.chart-box.small { width: 190px; height: 175px; }
+.chart-box.large { height: 175px; }
+.charts-row   { margin-bottom: 8px; padding: 0 20px; gap: 16px; }

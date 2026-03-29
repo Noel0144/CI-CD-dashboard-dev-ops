@@ -21,13 +21,14 @@ document.getElementById("fetchBtn").addEventListener("click", async () => {
       await response.json();
       if (apiUrl.includes("/repos/")) {
         localStorage.setItem("targetRepo", query);
+        // Reset section init flags so sections reload with the new repo
         if (window._spaInit) {
           ["build","deploy","pipeline","health"].forEach(k => { window._spaInit[k] = false; });
         }
       }
       statusMsg.style.color = "rgb(12, 235, 12)";
-      statusMsg.innerHTML = `Data fetched successfully!<br><br>
-        <button onclick="showSection('dashboard')"
+      statusMsg.innerHTML   = `Data fetched successfully!<br><br>
+        <button onclick="showSection('pipeline')"
           style="background:none;border:none;color:#32e6e2;text-decoration:underline;
                  font-weight:bold;cursor:pointer;font-size:14px;">
           Go to Dashboard

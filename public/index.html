@@ -1,388 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CI/CD Pipeline</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-  <script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI/CD Pipeline</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<header>Dev Ops CI/CD Pipeline</header>
-
-<nav id="navbar">
-  <div id="child1">
-    <img width="100" src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="logo" />
-  </div>
-  <div id="child2" class="child2">
-    <a href="#" class="nav-link" data-section="home"     onclick="showSection('home');return false;">Home</a>
-    <a href="#" class="nav-link" data-section="build"    onclick="showSection('build');return false;">Build</a>
-    <a href="#" class="nav-link" data-section="deploy"   onclick="showSection('deploy');return false;">Deploy</a>
-    <a href="#" class="nav-link" data-section="pipeline" onclick="showSection('pipeline');return false;">Pipeline</a>
-    <a href="#" class="nav-link" data-section="health"   onclick="showSection('health');return false;">Health</a>
-    <a href="#" class="nav-link" data-section="fetch"    onclick="showSection('fetch');return false;">Fetch Repo</a>
-  </div>
-  <div id="child3"><!-- filled by JS --></div>
-</nav>
-
-<!-- ===== HOME ===== -->
-<div id="section-home" class="page-section">
-  <section id="hero">
-    <div>
-      <h1 class="head">Build. Test. Deploy. Repeat.</h1>
-      <p class="sub-head">Streamline your CI/CD workflow with automated pipelines and real-time monitoring.</p>
-    </div>
-    <div class="hero_animation">
-      <iframe src="https://defxharsh.github.io/logo_link/cicd-animation.html"></iframe>
-    </div>
-  </section>
-</div>
-
-<!-- ===== BUILD ===== -->
-<div id="section-build" class="page-section">
-  <h1 class="page-heading">Build Status &amp; Performance</h1>
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-number teal" id="kpi-total">—</div><div class="stat-label">Total Builds</div></div>
-    <div class="stat-card"><div class="stat-number green" id="kpi-pass">—</div><div class="stat-label">Passed</div></div>
-    <div class="stat-card"><div class="stat-number red" id="kpi-fail">—</div><div class="stat-label">Failed</div></div>
-    <div class="stat-card"><div class="stat-number yellow" id="kpi-run">—</div><div class="stat-label">Running</div></div>
-    <div class="stat-card"><div class="stat-number teal" id="kpi-avg-dur">—</div><div class="stat-label">Avg Duration</div></div>
-  </div>
-  <div class="charts-row">
-    <div class="chart-card">
-      <div class="chart-title">Build Outcome</div>
-      <div class="chart-box small"><canvas id="buildDonutChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Duration Trend (seconds)</div>
-      <div class="chart-box large"><canvas id="buildBarChart"></canvas></div>
-    </div>
-  </div>
-  <div style="text-align:center;margin:8px 0 12px">
-    <button class="toggle-btn" onclick="toggleBuildDetail(this)">&#11015; View Details</button>
-  </div>
-  <div class="detail-panel" id="buildDetailPanel">
-    <div class="build-wrap">
-      <div class="card">
-        <h2>Recent Build History</h2>
-        <table class="build-table">
-          <thead><tr><th>Build</th><th>Branch</th><th>Status</th><th>Duration</th></tr></thead>
-          <tbody id="buildTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="perf-card">
-      <h2>Build Performance</h2>
-      <div class="perf-inline-grid">
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Test Coverage</span><span class="teal">87%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-teal" style="width:87%"></div></div>
+    <header>Dev Ops CI/CD Pipeline</header>
+    <nav id="navbar">
+        <div id="child1"> <img width="100" src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="Logo">
         </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Code Quality</span><span class="green">92%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-green" style="width:92%"></div></div>
+        <div id="child2" class="child2">
+            <a href="index.html">Home</a>
+            <a href="build.html">Build</a>
+            <a href="deploy.html">Deploy</a>
+            <a href="pipeline.html">Pipeline</a>
+            <a href="health.html">Health</a>
+            <a href="fetch.html">Fetch Repo</a>
         </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Build Success</span><span class="teal">85%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-teal" style="width:85%"></div></div>
+        <div id="child3">
+            <a href="login.html"><button id="btn1" class="btn">Log in</button></a>
         </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Deploy Freq</span><span class="yellow">68%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-yellow" style="width:68%"></div></div>
+    </nav>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = localStorage.getItem('githubUser');
+            if (user) {
+                const userData = JSON.parse(user);
+                const child3 = document.getElementById('child3');
+                child3.innerHTML = `
+                    <span style="color: white; font-weight: bold; margin-right: 15px;">Hi, ${userData.login}</span>
+                    <a href="pipeline.html"><button class="btn" style="background-color: #32e6e2; width: auto; padding: 0 10px;">Dashboard</button></a>
+                    <button class="btn" style="background-color: #ff4d4d; width: auto; padding: 0 10px;" onclick="logout()">Log out</button>
+                `;
+            }
+        });
+    </script>
+    
+    <section id="hero">
+        <div>
+            <h1 class="head">Build. Test. Deploy. Repeat.</h1>
+            <p class="sub-head">Streamline your CI/CD workflow with automated pipelines and real-time monitoring.</p>
         </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Success Rate</span><span class="teal">85%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-teal" style="width:85%"></div></div>
+        <div class="hero_animation">
+            <iframe src="https://defxharsh.github.io/logo_link/cicd-animation.html"> </iframe>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== DEPLOY ===== -->
-<div id="section-deploy" class="page-section">
-  <h1 class="page-heading">Deployment Status</h1>
-  <p class="page-sub">Monitor and manage your application deployments across environments</p>
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-number teal" id="deploy-kpi-0">3</div><div class="stat-label">Environments</div></div>
-    <div class="stat-card"><div class="stat-number green" id="deploy-kpi-1">2</div><div class="stat-label">Live</div></div>
-    <div class="stat-card"><div class="stat-number yellow" id="deploy-kpi-2">1</div><div class="stat-label">Deploying</div></div>
-    <div class="stat-card"><div class="stat-number teal" id="deploy-kpi-3">v2.4.0</div><div class="stat-label">Prod Version</div></div>
-    <div class="stat-card"><div class="stat-number teal" id="deploy-kpi-4">4m 12s</div><div class="stat-label">Avg Deploy Time</div></div>
-  </div>
-  <div class="charts-row">
-    <div class="chart-card">
-      <div class="chart-title">Deployment Outcomes</div>
-      <div class="chart-box small"><canvas id="deployDonutChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Deploy Duration Trend (seconds)</div>
-      <div class="chart-box large"><canvas id="deployBarChart"></canvas></div>
-    </div>
-  </div>
-  <div style="text-align:center;margin:8px 0 12px">
-    <button class="toggle-btn" onclick="toggleDeployDetail(this)">&#11015; View Details</button>
-  </div>
-  <div class="detail-panel" id="deployDetailPanel">
-    <div class="build-wrap">
-      <div class="card">
-        <h2>Recent Deployments</h2>
-        <table class="build-table cols-5">
-          <thead><tr><th>Environment</th><th>Version</th><th>Status</th><th>Duration</th><th>Timestamp</th></tr></thead>
-          <tbody id="deployTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="perf-card">
-      <h2>Deployment Performance</h2>
-      <div class="perf-inline-grid">
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Success Rate</span><span class="teal">91%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-teal" style="width:91%"></div></div>
+    </section>
+    <br>
+    <br>
+    <hr>
+    <footer>
+        <div id="foot">
+        <div id="foot1" class="foot_child">
+            <h3>English(United States)</h3>
+            <h3>Your Privacy Choice</h3>
         </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Prod Stability</span><span class="green">100%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
+        <div id="foot2" class="foot_child">
+            <h3>Ai Disclaimer</h3>
+            <h3>Terms of Use</h3>
+            <h3>Trademarks</h3>
+            <h3>© Web Vit 2026</h3>
         </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Rollback Rate</span><span class="red">4%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-red" style="width:4%"></div></div>
         </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Deploy Freq</span><span class="yellow">68%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-yellow" style="width:68%"></div></div>
-        </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>QA Pass Rate</span><span class="green">100%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== PIPELINE ===== -->
-<div id="section-pipeline" class="page-section">
-  <h1 class="page-heading">Pipeline Status</h1>
-  <p class="page-sub">Track recent pipeline runs, stage-by-stage progress, and execution metrics across all branches</p>
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-number teal" id="pipeline-kpi-0">284</div><div class="stat-label">Total Runs (30d)</div></div>
-    <div class="stat-card"><div class="stat-number green" id="pipeline-kpi-1">94.3%</div><div class="stat-label">Success Rate</div></div>
-    <div class="stat-card"><div class="stat-number red" id="pipeline-kpi-2">16</div><div class="stat-label">Failed Runs</div></div>
-    <div class="stat-card"><div class="stat-number yellow" id="pipeline-kpi-3">1</div><div class="stat-label">Running Now</div></div>
-    <div class="stat-card"><div class="stat-number teal">6m 42s</div><div class="stat-label">Avg Duration</div></div>
-  </div>
-  <div class="charts-row">
-    <div class="chart-card">
-      <div class="chart-title">Run Outcomes</div>
-      <div class="chart-box small"><canvas id="pipelineDonutChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Stage Failure Rate (%)</div>
-      <div class="chart-box large"><canvas id="pipelineBarChart"></canvas></div>
-    </div>
-  </div>
-  <div class="pipeline-toggle-row">
-    <button class="toggle-btn" onclick="togglePipelinePanel('stagePanel',this,'&#11015; Stage Breakdown','&#11014; Stage Breakdown')">&#11015; Stage Breakdown</button>
-    <button class="toggle-btn toggle-btn-runs" onclick="togglePipelinePanel('runsPanel',this,'&#11015; Pipeline Runs','&#11014; Pipeline Runs')">&#11015; Pipeline Runs <span class="run-badge running-badge">1 Live</span></button>
-    <button class="toggle-btn toggle-btn-history" onclick="togglePipelinePanel('historyPanel',this,'&#11015; Full History','&#11014; Full History')">&#11015; Full History</button>
-  </div>
-  <div class="detail-panel" id="stagePanel">
-    <div class="build-wrap">
-      <div class="card">
-        <h2>Stage Failure Breakdown</h2>
-        <div class="stage-breakdown-grid" id="stageBreakdown"></div>
-      </div>
-    </div>
-    <div class="perf-card">
-      <h2>Pipeline Performance</h2>
-      <div class="perf-inline-grid">
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Overall Success</span><span class="green">94.3%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-green" style="width:94.3%"></div></div>
-        </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Build Pass Rate</span><span class="teal">97.2%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-teal" style="width:97.2%"></div></div>
-        </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Test Pass Rate</span><span class="yellow">95.9%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-yellow" style="width:95.9%"></div></div>
-        </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Deploy Success</span><span class="green">99.5%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-green" style="width:99.5%"></div></div>
-        </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Security Pass</span><span class="teal">98.8%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-teal" style="width:98.8%"></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="detail-panel" id="runsPanel">
-    <div class="build-wrap">
-      <div class="card">
-        <h2>Recent Pipeline Runs</h2>
-        <div id="pipelineRuns"></div>
-      </div>
-    </div>
-  </div>
-  <div class="detail-panel" id="historyPanel">
-    <div class="build-wrap">
-      <div class="card">
-        <h2>Pipeline History</h2>
-        <table class="build-table">
-          <thead><tr><th>Run</th><th>Branch</th><th>Status</th><th>Duration</th><th>Failed Stage</th></tr></thead>
-          <tbody id="historyTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== HEALTH ===== -->
-<div id="section-health" class="page-section">
-  <h1 class="page-heading">System Health</h1>
-  <div class="stats-row">
-    <div class="stat-card"><div class="stat-number teal" id="health-kpi-0">4</div><div class="stat-label">Services</div></div>
-    <div class="stat-card"><div class="stat-number green" id="health-kpi-1">3</div><div class="stat-label">Healthy</div></div>
-    <div class="stat-card"><div class="stat-number yellow" id="health-kpi-2">1</div><div class="stat-label">Warning</div></div>
-    <div class="stat-card"><div class="stat-number red" id="health-kpi-3">0</div><div class="stat-label">Critical</div></div>
-    <div class="stat-card"><div class="stat-number teal" id="health-kpi-4">99.98%</div><div class="stat-label">Avg Uptime</div></div>
-  </div>
-  <div class="charts-row">
-    <div class="chart-card">
-      <div class="chart-title">Service Health Overview</div>
-      <div class="chart-box small"><canvas id="healthDonutChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Resource Utilization (%)</div>
-      <div class="chart-box large"><canvas id="healthBarChart"></canvas></div>
-    </div>
-  </div>
-  <div class="health-toggle-row">
-    <button class="toggle-btn" onclick="toggleHealthPanel('servicePanel',this)">&#11015; Service Details</button>
-    <button class="toggle-btn toggle-btn-alert" onclick="toggleHealthPanel('alertPanel',this)">&#9888; Active Alerts <span class="alert-badge">2</span></button>
-  </div>
-  <div class="detail-panel" id="servicePanel">
-    <div class="build-wrap">
-      <div class="card">
-        <h2>Service Status</h2>
-        <table class="build-table">
-          <thead><tr><th>Service</th><th>Metric</th><th>Status</th><th>Value</th></tr></thead>
-          <tbody id="serviceTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-    <div class="perf-card">
-      <h2>Infrastructure Performance</h2>
-      <div class="perf-inline-grid">
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>API Uptime</span><span class="teal">99.98%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-teal" style="width:99.98%"></div></div>
-        </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>DB CPU Usage</span><span class="green">12.5%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-green" style="width:12.5%"></div></div>
-        </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Auth Response</span><span class="teal">18ms</span></div>
-          <div class="progress-track"><div class="progress-fill fill-teal" style="width:90%"></div></div>
-        </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Cache Memory</span><span class="yellow">88.2%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-yellow" style="width:88.2%"></div></div>
-        </div>
-        <div class="perf-inline-item">
-          <div class="perf-inline-label"><span>Overall Health</span><span class="green">94%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-green" style="width:94%"></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="detail-panel" id="alertPanel">
-    <div class="build-wrap">
-      <div class="card">
-        <h2>Active Alerts</h2>
-        <div id="alertList"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== FETCH REPO ===== -->
-<div id="section-fetch" class="page-section">
-  <div style="display:flex;justify-content:center;margin-top:40px">
-    <div class="card" style="width:500px;text-align:center">
-      <h2 style="color:#32e6e2;margin-bottom:20px">Fetch Repository Data</h2>
-      <p style="color:#aaa;margin-bottom:20px">Enter a GitHub username, repository name (owner/repo), or repository link to fetch its real-time data.</p>
-      <input type="text" id="repoInput" placeholder="e.g. facebook/react or https://github.com/..."
-        style="padding:10px;width:80%;margin-bottom:20px;border-radius:5px;border:1px solid #2a3a50;background-color:#0e1923;color:white;display:inline-block;" />
-      <br />
-      <button id="fetchBtn" class="btn_primary" style="width:80%">Fetch &amp; Download Data</button>
-      <p id="statusMsg" style="margin-top:15px;display:none"></p>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div id="foot">
-    <div class="foot_child"><h3>English (United States)</h3><h3>Your Privacy Choice</h3></div>
-    <div class="foot_child"><h3>AI Disclaimer</h3><h3>Terms of Use</h3><h3>Trademarks</h3><h3>© Web Vit 2026</h3></div>
-  </div>
-  <p class="feet">© 2026 Web Dev. All rights reserved</p>
-</footer>
-
-<script src="build.js"></script>
-<script src="deploy.js"></script>
-<script src="pipeline.js"></script>
-<script src="health.js"></script>
-<script src="fetch.js"></script>
-
-<script>
-  // ===== SPA NAVIGATION =====
-  window._spaInit = {};
-
-  function showSection(name) {
-    const protected_ = ['build','deploy','pipeline','health','fetch'];
-    if (protected_.includes(name) && !localStorage.getItem('githubUser')) {
-      window.location.href = 'login.html';
-      return;
-    }
-    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-    document.getElementById('section-' + name).classList.add('active');
-    document.querySelectorAll('#child2 .nav-link').forEach(a => a.classList.remove('nav-active'));
-    const lnk = document.querySelector(`#child2 .nav-link[data-section="${name}"]`);
-    if (lnk) lnk.classList.add('nav-active');
-
-    if (!window._spaInit[name]) {
-      window._spaInit[name] = true;
-      if (name === 'build'    && typeof initBuild    === 'function') initBuild();
-      if (name === 'deploy'   && typeof initDeploy   === 'function') initDeploy();
-      if (name === 'pipeline' && typeof initPipeline === 'function') initPipeline();
-      if (name === 'health'   && typeof initHealth   === 'function') initHealth();
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const user = localStorage.getItem('githubUser');
-    const child3 = document.getElementById('child3');
-    if (user) {
-      const ud = JSON.parse(user);
-      child3.innerHTML = `
-        <span style="color:white;font-weight:bold;margin-right:15px;">Hi, ${ud.login}</span>
-        <button class="btn" style="background-color:#32e6e2;width:auto;padding:0 10px;" onclick="showSection('fetch')">Dashboard</button>
-        <button class="btn" style="background-color:#ff4d4d;width:auto;padding:0 10px;" onclick="logout()">Log out</button>`;
-    } else {
-      child3.innerHTML = '<a href="login.html"><button id="btn1" class="btn">Log in</button></a>';
-    }
-    const params = new URLSearchParams(window.location.search);
-    showSection(params.get('section') || 'home');
-  });
-</script>
+        <p class="feet"> © 2026 Web Dev. All rights reserved</p>
+    </footer>
 
 </body>
 </html>

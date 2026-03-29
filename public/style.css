@@ -1582,31 +1582,3 @@ th {
 @media (max-width: 500px) {
     .perf-inline-grid { grid-template-columns: 1fr; }
 }
-
-/* ===== SPA: section visibility ===== */
-.page-section          { display: none; }
-.page-section.active   { display: block; }
-
-/* Active nav link highlight */
-.nav-active {
-  color: #32e6e2 !important;
-  border-bottom: 2px solid #32e6e2;
-  padding-bottom: 4px;
-}
-
-/* ===== Condense layout to reduce scrolling ===== */
-.stat-card    { padding: 10px 18px; min-width: 120px; }
-.stat-number  { font-size: 26px; margin-bottom: 4px; }
-.stat-label   { font-size: 11px; }
-.stats-row    { gap: 12px; margin-bottom: 14px; padding: 0 24px; }
-.page-heading { font-size: 24px; margin: 14px 0 4px; }
-.page-sub     { font-size: 13px; margin-bottom: 12px; }
-.charts-row   { margin-bottom: 10px; }
-
-/* Shorter charts so stats+charts+toggle all fit without scrolling */
-.chart-box.small { width: 210px; height: 195px; }
-.chart-box.large { height: 195px; }
-
-/* Slightly tighter toggle rows */
-.health-toggle-row,
-.pipeline-toggle-row { margin: 6px 0 14px; }

@@ -1,11 +1,21 @@
+// auth.js
 function checkAuth() {
-  if (!localStorage.getItem("githubUser")) {
-    window.location.href = "login.html";
-  }
+    const user = localStorage.getItem('githubUser');
+    if (!user) {
+        window.location.href = 'login.html';
+    }
 }
 
 function logout() {
-  localStorage.removeItem("githubUser");
-  localStorage.removeItem("targetRepo");
-  window.location.href = "login.html";
+    localStorage.removeItem('githubUser');
+    window.location.href = 'index.html';
+}
+
+// Call checkAuth on page load if it is a protected page
+// The script should be placed in the <head> to prevent flicker
+if (window.location.pathname.endsWith('build.html') ||
+    window.location.pathname.endsWith('deploy.html') ||
+    window.location.pathname.endsWith('health.html') ||
+    window.location.pathname.endsWith('pipeline.html')) {
+    checkAuth();
 }

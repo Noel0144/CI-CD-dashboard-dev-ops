@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CI/CD Pipeline - Build</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="auth.js"></script>
+</head>
+<body>
+
+<header>Dev Ops CI/CD Pipeline</header>
+
+<nav id="navbar">
+    <div id="child1">
+        <img width="100" src="https://raw.githubusercontent.com/defxharsh/logo_link/main/image%20(1).png" alt="logo">
+    </div>
+    <div id="child2" class="child2">
+        <a href="index.html">Home</a>
+        <a href="build.html">Build</a>
+        <a href="deploy.html">Deploy</a>
+        <a href="pipeline.html">Pipeline</a>
+        <a href="health.html">Health</a>
+        <a href="fetch.html">Fetch Repo</a>
+    </div>
+    <div id="child3">
+        <span id="nav-username" style="color: white; font-weight: bold; margin-right: 15px;"></span>
+        <button class="btn" style="background-color: #ff4d4d; width: auto; padding: 0 10px;" onclick="logout()">Log out</button>
+    </div>
+</nav>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const user = localStorage.getItem('githubUser');
+        if (user) {
+            const userData = JSON.parse(user);
+            document.getElementById('nav-username').textContent = `Hi, ${userData.login}`;
+        }
+    });
+</script>
+
+<h1 class="page-heading">Build Status &amp; Performance</h1>
+
+<!-- STAT CARDS -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-number teal" id="kpi-total">128</div>
+        <div class="stat-label">Total Builds</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number green" id="kpi-pass">109</div>
+        <div class="stat-label">Passed</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number red" id="kpi-fail">14</div>
+        <div class="stat-label">Failed</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number yellow" id="kpi-run">5</div>
+        <div class="stat-label">Running</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number teal">2m 34s</div>
+        <div class="stat-label">Avg Duration</div>
+    </div>
+</div>
+
+<!-- CHARTS ROW -->
+<div class="charts-row">
+    <div class="chart-card">
+        <div class="chart-title">Build Outcome</div>
+        <div class="chart-box small">
+            <canvas id="donutChart"></canvas>
+        </div>
+    </div>
+    <div class="chart-card">
+        <div class="chart-title">Duration Trend (seconds)</div>
+        <div class="chart-box large">
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- TOGGLE BUTTON -->
+<div style="text-align:center; margin: 8px 0 20px;">
+    <button class="toggle-btn" onclick="toggleDetail(this)">&#11015; View Details</button>
+</div>
+
+<!-- DETAIL PANEL — simple: 4-col table + inline perf bars -->
+<div class="detail-panel" id="detailPanel">
+
+    <div class="build-wrap">
+        <div class="card">
+            <h2>Recent Build History</h2>
+            <table class="build-table">
+                <thead>
+                    <tr>
+                        <th>Build</th>
+                        <th>Branch</th>
+                        <th>Status</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody id="buildTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="perf-card">
+        <h2>Build Performance</h2>
+        <div class="perf-inline-grid">
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Test Coverage</span><span class="teal">87%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-teal" style="width:87%"></div></div>
+            </div>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Code Quality Score</span><span class="green">92%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-green" style="width:92%"></div></div>
+            </div>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Build Success Rate</span><span class="teal">85%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-teal" style="width:85%"></div></div>
+            </div>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Deploy Frequency</span><span class="yellow">68%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-yellow" style="width:68%"></div></div>
+            </div>
+            <div class="perf-inline-item">
+                <div class="perf-inline-label"><span>Success Rate</span><span class="teal">85%</span></div>
+                <div class="progress-track"><div class="progress-fill fill-teal" style="width:85%"></div></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<br><hr>
+
+<footer>
+    <div id="foot">
+        <div class="foot_child">
+            <h3>English (United States)</h3>
+            <h3>Your Privacy Choice</h3>
+        </div>
+        <div class="foot_child">
+            <h3>AI Disclaimer</h3>
+            <h3>Terms of Use</h3>
+            <h3>Trademarks</h3>
+            <h3>© Web Vit 2026</h3>
+        </div>
+    </div>
+    <p class="feet">© 2026 Web Dev. All rights reserved</p>
+</footer>
+
+<script src="build.js"></script>
+</body>
+</html>
